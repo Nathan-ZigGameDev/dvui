@@ -120,6 +120,11 @@ pub fn build(b: *std.Build) !void {
         "log_error_trace",
         b.option(bool, "log-error-trace", "If error logs should include the error return trace (automatically enabled with log stack traces)"),
     );
+    build_options.addOption(
+        bool,
+        "debug_window",
+        b.option(bool, "debug-window", "Compile the DVUI debug window") orelse (optimize == .Debug or optimize == .ReleaseSafe),
+    );
 
     const vertex_index = b.option(VertexIndex, "vertex-index", "Vertex index type (default u16)") orelse .u16;
     build_options.addOption(

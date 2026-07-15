@@ -1368,7 +1368,8 @@ pub fn endRendering(self: *Self, opts: endOptions) void {
         };
     }
 
-    self.debug.show();
+    if (@import("build_options").debug_window)
+        self.debug.show();
 
     for (self.subwindows.stack.items) |*sw| {
         self.renderCommands(sw.render_cmds.items) catch |err| {
