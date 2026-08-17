@@ -443,6 +443,11 @@ pub fn processScrollTo(
             dvui.refresh(null, @src(), self.data().id);
         }
     }
+
+    if (self.parentScroll) |parent| {
+        if (parent.subwindowId == self.subwindowId)
+            parent.processScrollTo(st);
+    }
 }
 
 pub fn processMotionScroll(self: *ScrollContainerWidget, motion: dvui.Point.Physical) void {

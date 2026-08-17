@@ -163,19 +163,16 @@ pub fn valueSaturationBox(src: std.builtin.SourceLocation, hsv: *Color.HSV, opts
     const br = b.data().contentRect();
     const current_point: dvui.Point = .{ .x = br.w * hsv.s, .y = br.h * (1 - hsv.v) };
 
-    var indicator = dvui.box(@src(), .{ .dir = .horizontal }, .{
-        .rect = dvui.Rect.fromPoint(current_point).toSize(.all(10)).offsetNeg(.all(5)),
-        .padding = .{},
-        .margin = .{},
-        .background = true,
-        .border = .all(1),
-        .corner_radius = .all(100),
-        .color_fill = hsv.toColor(),
+    const adjusting = dvui.dataGet(null, b.data().id, "_adjusting", bool) orelse false;
+    const focused = b.data().id == dvui.focusedWidgetId();
+    const size: f32 = 14;
+    const thick: f32 = if (adjusting) 5 else 1.5;
+    const circle = b.widget().screenRectScale(dvui.Rect.fromPoint(current_point).toSize(.all(size)).offsetNeg(.all(size / 2))).r;
+    circle.stroke(.all(100), .{
+        .after = true,
+        .thickness = thick * b.data().rectScale().s,
+        .color = if (adjusting or focused) .white else .fromHex("#a89984"),
     });
-    if (b.data().id == dvui.focusedWidgetId()) {
-        indicator.data().focusBorder();
-    }
-    indicator.deinit();
 
     return changed;
 }
@@ -334,11 +331,18 @@ pub fn hueSlider(src: std.builtin.SourceLocation, dir: dvui.enums.Direction, hue
         .background = true,
         .border = .all(1),
         .corner_radius = .all(100),
-        .color_fill = (Color.HSV{ .h = hue.* }).toColor(),
+        .color_fill = blk: {
+            const adjusting = dvui.dataGet(null, b.data().id, "_adjusting", bool) orelse false;
+            const focused = b.data().id == dvui.focusedWidgetId();
+            break :blk if (adjusting)
+                dvui.themeGet().color(.highlight, .fill)
+            else if (focused)
+                .white
+            else
+                .fromHex("#a89984");
+        },
+        .color_border = .fromHex("#1d2021"),
     });
-    if (b.data().id == dvui.focusedWidgetId()) {
-        knob.data().focusBorder();
-    }
     knob.deinit();
 
     return ret;

@@ -1900,7 +1900,9 @@ pub const ScrollToOptions = struct {
     over_scroll: bool = false,
 };
 
-/// Scroll the current containing scroll area to show the passed in screen rect
+/// Scroll the current containing scroll area to show the passed in screen rect.
+/// Nested scroll containers (for example a grid inside a scroll area) all get
+/// a chance so the outer clip actually moves.
 pub fn scrollTo(scroll_to: ScrollToOptions) void {
     if (ScrollContainerWidget.current()) |scroll| {
         scroll.processScrollTo(scroll_to);

@@ -84,7 +84,7 @@ pub fn style(self: *ButtonWidget) Options {
     if (dvui.captured(self.data().id)) {
         opts.color_fill = self.data().options.color(.fill_press);
         opts.color_text = self.data().options.color(.text_press);
-    } else if (self.hover) {
+    } else if (self.hover or self.focused()) {
         opts.color_fill = self.data().options.color(.fill_hover);
         opts.color_text = self.data().options.color(.text_hover);
     }

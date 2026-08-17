@@ -31,7 +31,6 @@ grabRect: Rect = Rect{},
 si: *ScrollInfo,
 focus_id: ?dvui.Id = null,
 dir: enums.Direction,
-highlight: bool = false,
 
 /// It's expected to call this when `self` is `undefined`
 pub fn init(self: *ScrollBarWidget, src: std.builtin.SourceLocation, init_opts: InitOptions, opts: Options) void {
@@ -177,7 +176,6 @@ pub fn processEvents(self: *ScrollBarWidget, grabrs: Rect.Physical) void {
                     },
                     .position => {
                         dvui.cursorSet(.arrow);
-                        self.highlight = true;
                     },
                     .wheel_x => |ticks| {
                         if (self.dir == .horizontal) {
@@ -210,14 +208,9 @@ pub const Grab = struct {
 };
 
 pub fn grab(self: *ScrollBarWidget) Grab {
-    var fill = self.data().options.color(.text).opacity(0.5);
-    if (dvui.captured(self.data().id) or self.highlight) {
-        fill = self.data().options.color(.text).opacity(0.3);
-    }
-
     return .{
         .rect = self.data().parent.screenRectScale(self.grabRect.insetAll(2)).r,
-        .color = fill,
+        .color = if (dvui.captured(self.data().id)) .white else .fromHex("#7c6f64"),
     };
 }
 

@@ -100,12 +100,11 @@ pub fn register(self: *WidgetData) void {
     if (self.id == focused_widget_id) {
         cw.last_focused_id_this_frame = self.id;
 
-        if (cw.scroll_to_focused) {
+        if (cw.scroll_to_focused)
             cw.scroll_to_focused = false;
-            dvui.scrollTo(.{
-                .screen_rect = self.rectScale().r,
-            });
-        }
+        dvui.scrollTo(.{
+            .screen_rect = self.rectScale().r,
+        });
     }
 
     if (self.id == dvui.focusedWidgetIdInCurrentSubwindow()) {

@@ -1368,7 +1368,8 @@ pub fn endRendering(self: *Self, opts: endOptions) void {
         };
     }
 
-    self.debug.show();
+    // Debug.show pulls the inspector (color picker, text layout, floating windows)
+    // into every Window.end caller. This app never opens it.
 
     for (self.subwindows.stack.items) |*sw| {
         self.renderCommands(sw.render_cmds.items) catch |err| {
